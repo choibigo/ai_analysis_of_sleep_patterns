@@ -16,7 +16,7 @@
 - 코드 실행 방법
 
 
-## ✔ Folder Struct
+## ✔ Directory Structure
 ```bash
 workspace/
   |-- docs/ # 보고서 및 개발 시 필요한 Document 저장 폴더입니다.
