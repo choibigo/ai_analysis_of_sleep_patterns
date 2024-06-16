@@ -12,7 +12,7 @@ def dataset_geeration(csv_path):
 
     # Feature와 Target을 분리합니다.
     # selected_columns = ['Feature1', 'Feature2', 'Feature3', 'Feature4', 'Feature6', 'Feature7', 'Feature8', 'Feature9', 'Feature10'] # 2200 - 5.108
-    # selected_columns = ['Feature1', 'Feature2', 'Feature3', 'Feature4', 'Feature5', 'Feature7', 'Feature8', 'Feature9', 'Feature10'] # 2200 - 5.108
+    # selected_columns = ['Feature1', 'Feature2', 'Feature3', 'Feature4', 'Feature5', 'Feature6', 'Feature8', 'Feature9', 'Feature10'] 
     # x = data[selected_columns].values
 
     x = data.iloc[:, 1:].values  # Feature: 1열부터 끝까지
@@ -66,7 +66,7 @@ if __name__ =="__main__":
 
     train_dataloader = DataLoader(TensorDataset(train_x, train_y), batch_size=64, shuffle=True)
 
-    input_size = 9 # Feature의 개수
+    input_size = 10 # Feature의 개수
     hidden_size = 50
     output_size = 1  # 예측할 값 (Age)
 
