@@ -5,13 +5,6 @@ import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.preprocessing import StandardScaler
 
-df = pd.read_csv('classification_trainset.csv')
-X = df.drop(['Label','Feature8'], axis=1).values
-y = df['Label'].values
-
-scaler = StandardScaler()
-X_scaled = scaler.fit_transform(X)
-
 class ResidualBlock(nn.Module):
     def __init__(self, in_features, out_features, dropout_p=0.1):
         super(ResidualBlock, self).__init__()
@@ -53,27 +46,17 @@ model = ResidualNN()
 model.load_state_dict(torch.load('best_model/best_model_0.1501_994_96.30.pth'))
 model.eval()
 
-X_test_tensor = torch.tensor(X_scaled, dtype=torch.float32)
-y_test_tensor = torch.tensor(y, dtype=torch.float32).unsqueeze(1)
-test_dataset = TensorDataset(X_test_tensor, y_test_tensor)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
+test_df = pd.read_csv('classification_testset.csv')
+X_test = test_df.drop(['Label', 'Feature8'], axis=1).values
 
-criterion = nn.BCELoss()
-test_loss = 0.0
-correct = 0
-total = 0
+scaler = StandardScaler()
+X_test_scaled = scaler.fit_transform(X_test)
+
+X_test_tensor = torch.tensor(X_test_scaled, dtype=torch.float32)
+
 with torch.no_grad():
-    for inputs, labels in test_loader:
-        outputs = model(inputs)
-        loss = criterion(outputs, labels)
-        test_loss += loss.item()
-        predicted = (outputs > 0.5).float()
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+    outputs = model(X_test_tensor)
+    predicted = (outputs > 0.5).float()
 
-avg_test_loss = test_loss / len(test_loader)
-print(correct)
-print(total)
-test_accuracy = 100 * correct / total
-
-print(f"Test Loss: {avg_test_loss:.4f}, Test Accuracy: {test_accuracy:.2f}%")
+test_df['Label'] = predicted.numpy().astype(int)
+test_df.to_csv('classification_testset_with_labels.csv', index=False)

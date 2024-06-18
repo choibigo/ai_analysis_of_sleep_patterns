@@ -13,7 +13,7 @@ from torch.utils.data import TensorDataset, DataLoader
 import matplotlib.pyplot as plt
 
 df = pd.read_csv('classification_trainset.csv')
-X = df.drop('Label', axis=1).values
+X = df.drop(['Label','Feature8'], axis=1).values
 y = df['Label'].values
 
 scaler = StandardScaler()
@@ -72,7 +72,7 @@ stacking_clf = StackingClassifier(estimators=estimators, final_estimator=Logisti
 stacking_scores = cross_val_score(stacking_clf, X_train, y_train, cv=5, scoring='accuracy')
 print("Stacking Classifier CV Accuracy: {:.2f}%".format(stacking_scores.mean() * 100))
 
-# 9. Deep Neural Network (PyTorch)
+# 9. Deep Neural Network
 class ResidualBlock(nn.Module):
     def __init__(self, in_features, out_features, dropout_p=0.1):
         super(ResidualBlock, self).__init__()
@@ -93,7 +93,7 @@ class ResidualBlock(nn.Module):
 class ResidualNN(nn.Module):
     def __init__(self):
         super(ResidualNN, self).__init__()
-        self.layer1 = nn.Linear(10, 16)
+        self.layer1 = nn.Linear(9, 16)
         self.bn1 = nn.BatchNorm1d(16)
         self.residual_block1 = ResidualBlock(16, 16)
         self.residual_block2 = ResidualBlock(16, 16)
