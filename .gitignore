@@ -1,2 +1,3 @@
-src/*/result/*.csv
-src/*/result/*.pth
+src/*/artifacts/*.csv
+*.pt
+*.pth
