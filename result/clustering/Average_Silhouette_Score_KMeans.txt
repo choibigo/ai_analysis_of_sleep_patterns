@@ -1,0 +1,2 @@
+Best number of clusters: 7
+Average silhouette score: 0.07788733968679047
