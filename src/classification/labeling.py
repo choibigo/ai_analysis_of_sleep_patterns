@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import torch
 import torch.nn as nn
@@ -46,7 +47,9 @@ model = ResidualNN()
 model.load_state_dict(torch.load('best_model/best_model_0.1501_994_96.30.pth'))
 model.eval()
 
-test_df = pd.read_csv('classification_testset.csv')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+data_file_path = os.path.join(current_dir, '../../data/classification_testset.csv')
+test_df = pd.read_csv(data_file_path)
 X_test = test_df.drop(['Label', 'Feature8'], axis=1).values
 
 scaler = StandardScaler()

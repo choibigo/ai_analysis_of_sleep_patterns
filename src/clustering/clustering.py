@@ -11,14 +11,14 @@ print(f'Total Data Num: {Raw_Data.shape[0]}')
 print(f'Feature Num: {Raw_Data.shape[1]}\n')
 
 # 데이터 정규화
-MM_Data = utils.regularize_data(Raw_Data, 'MinMaxScaler')
+MM_Data = utils.regularize_data(Raw_Data, 'StandardScaler')
 
 # 클러스터링
 Algorithm = 'KMeans'
 print(f'Grid Searching {Algorithm}...')
 t1 = time.time()
 if Algorithm == 'KMeans':
-    best_n_clusters, labels, max_silhouette = utils.grid_search_kmeans(MM_Data, 2, 20)
+    best_n_clusters, labels, max_silhouette = utils.grid_search_kmeans(MM_Data, 2, 10)
 elif Algorithm == 'DBSCAN':
     best_n_clusters, labels, max_silhouette = utils.grid_search_dbscan(MM_Data, 0.1, 1, 2, 10)
 elapsed_time = time.time()-t1
@@ -30,7 +30,7 @@ utils.figure_silhouette(MM_Data, labels, Algorithm)
 # t-SNE, UMAP -> Results에 시각화 결과 저장
 print('Starting T-SNE...')
 t1 = time.time()
-tsne = TSNE(n_components=2,random_state=1)
+tsne = TSNE(n_components=2,random_state=0)
 Data_tsne = tsne.fit_transform(MM_Data)
 elapsed_time = time.time()-t1
 print(f'T-SNE finished: {elapsed_time:.3f}s \n')

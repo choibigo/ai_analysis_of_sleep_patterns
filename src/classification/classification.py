@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 from sklearn.model_selection import train_test_split, cross_val_score, GridSearchCV
 from sklearn.preprocessing import StandardScaler
@@ -12,7 +13,9 @@ import torch.optim as optim
 from torch.utils.data import TensorDataset, DataLoader
 import matplotlib.pyplot as plt
 
-df = pd.read_csv('classification_trainset.csv')
+current_dir = os.path.dirname(os.path.abspath(__file__))
+data_file_path = os.path.join(current_dir, '../../data/classification_trainset.csv')
+df = pd.read_csv(data_file_path)
 X = df.drop(['Label','Feature8'], axis=1).values
 y = df['Label'].values
 
@@ -109,19 +112,16 @@ class ResidualNN(nn.Module):
         x = self.sigmoid(self.output(x))
         return x
 
-# 모델 초기화 및 손실 함수, 옵티마이저 정의
 model = ResidualNN()
 criterion = nn.BCELoss()
 optimizer = optim.Adam(model.parameters(), lr=0.0005)
 # optimizer = optim.SGD(model.parameters(), lr=0.005)
 
-# Convert to PyTorch tensors
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
 y_train_tensor = torch.tensor(y_train, dtype=torch.float32).unsqueeze(1)
 train_dataset = TensorDataset(X_train_tensor, y_train_tensor)
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
 
-# Evaluate on validation set
 X_val_tensor = torch.tensor(X_test, dtype=torch.float32)
 y_val_tensor = torch.tensor(y_test, dtype=torch.float32).unsqueeze(1)
 val_dataset = TensorDataset(X_val_tensor, y_val_tensor)
@@ -133,7 +133,6 @@ best_val_accuracy = -float('inf')
 best_val_loss = float('inf')
 best_model_state_dict = None
 
-# Training the model
 num_epochs = 1000
 for epoch in range(num_epochs):
     model.train()
